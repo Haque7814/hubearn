@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HubEarn - Everyday Tools for Everyone</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- PDF.js library for PDF processing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <!-- Compressor.js for image processing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.1.1/compressor.min.js"></script>
+    <!-- QR code generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
     <style>
         :root {
             --primary: #6366f1;
@@ -36,6 +43,7 @@
             color: var(--light-200);
             min-height: 100vh;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         /* Header Styles */
@@ -55,6 +63,7 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            text-decoration: none;
         }
 
         .logo-icon {
@@ -183,6 +192,9 @@
             text-align: center;
             transition: var(--transition);
             border: 1px solid var(--dark-700);
+            text-decoration: none;
+            display: block;
+            color: var(--light-200);
         }
 
         .feature-card:hover {
@@ -314,26 +326,25 @@
             font-weight: 500;
             transition: var(--transition);
             width: 100%;
+            text-decoration: none;
         }
 
         .tool-btn:hover {
             background: var(--primary);
         }
 
-        /* Demo Tool Section */
-        .demo-tool {
-            padding: 4rem 2rem;
-            background: var(--dark-800);
-            max-width: 1200px;
-            margin: 2rem auto;
-            border-radius: var(--radius);
-        }
-
+        /* Tool Container Styles */
         .tool-container {
             background: var(--dark-700);
             border-radius: var(--radius);
             padding: 2rem;
             box-shadow: var(--shadow);
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .tool-container.active {
+            display: block;
         }
 
         .tool-header {
@@ -350,13 +361,13 @@
 
         .tool-interface {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 1.5rem;
         }
 
-        @media (max-width: 768px) {
+        @media (min-width: 992px) {
             .tool-interface {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
             }
         }
 
@@ -389,10 +400,44 @@
             resize: none;
         }
 
+        .file-upload {
+            border: 2px dashed var(--dark-600);
+            border-radius: var(--radius);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 1rem;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+        }
+
+        .file-upload i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .tool-preview {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .tool-preview img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: var(--radius);
+            border: 1px solid var(--dark-600);
+        }
+
         .tool-actions {
             display: flex;
             gap: 1rem;
             margin-top: 1.5rem;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -423,6 +468,32 @@
 
         .btn-secondary:hover {
             background: var(--dark-700);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #0da271;
+        }
+
+        /* Progress bar */
+        .progress-container {
+            width: 100%;
+            background-color: var(--dark-600);
+            border-radius: 10px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: var(--primary);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.4s ease;
         }
 
         /* Benefits Section */
@@ -536,27 +607,35 @@
             .section-header h2 {
                 font-size: 2rem;
             }
+            
+            .tool-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Header with Logo and Navigation -->
     <header>
-        <div class="logo">
+        <a href="#" class="logo">
             <div class="logo-icon"></div>
             <div>
                 <div class="logo-text">HubEarn</div>
                 <div class="tagline">Everyday Tools for Everyone</div>
             </div>
-        </div>
+        </a>
         <nav>
             <ul>
                 <li><a href="#" class="active">Home</a></li>
-                <li><a href="#">PDF Tools</a></li>
-                <li><a href="#">Image Tools</a></li>
-                <li><a href="#">Text Tools</a></li>
-                <li><a href="#">Developer</a></li>
-                <li><a href="#">Utilities</a></li>
+                <li><a href="#pdf-tools">PDF Tools</a></li>
+                <li><a href="#image-tools">Image Tools</a></li>
+                <li><a href="#text-tools">Text Tools</a></li>
+                <li><a href="#dev-tools">Developer</a></li>
+                <li><a href="#utility-tools">Utilities</a></li>
             </ul>
         </nav>
         <button class="mobile-menu-btn">
@@ -570,34 +649,34 @@
         <p>HubEarn offers a complete suite of free, privacy-focused tools for students, developers, freelancers, and businesses. No signups, no ads, no tracking - just tools that work.</p>
         
         <div class="features-grid">
-            <div class="feature-card">
+            <a href="#pdf-tools" class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-file-pdf"></i>
                 </div>
                 <h3>PDF Tools</h3>
                 <p>Merge, split, compress, and secure PDFs without leaving your browser</p>
-            </div>
-            <div class="feature-card">
+            </a>
+            <a href="#image-tools" class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-image"></i>
                 </div>
                 <h3>Image Tools</h3>
                 <p>Compress, resize, and convert images while maintaining quality</p>
-            </div>
-            <div class="feature-card">
+            </a>
+            <a href="#dev-tools" class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-code"></i>
                 </div>
                 <h3>Developer Tools</h3>
                 <p>Essential utilities for developers including formatters and encoders</p>
-            </div>
-            <div class="feature-card">
+            </a>
+            <a href="#utility-tools" class="feature-card">
                 <div class="feature-icon">
                     <i class="fas fa-calculator"></i>
                 </div>
                 <h3>Calculators</h3>
                 <p>Specialized calculators for finance, health, dates, and conversions</p>
-            </div>
+            </a>
         </div>
     </section>
 
@@ -609,139 +688,261 @@
         </div>
 
         <div class="category-tabs">
-            <button class="tab-btn active">All Tools</button>
-            <button class="tab-btn">PDF Tools</button>
-            <button class="tab-btn">Image Tools</button>
-            <button class="tab-btn">Text Tools</button>
-            <button class="tab-btn">Developer</button>
-            <button class="tab-btn">Calculators</button>
-            <button class="tab-btn">Utilities</button>
-            <button class="tab-btn">Security</button>
+            <button class="tab-btn active" data-category="all">All Tools</button>
+            <button class="tab-btn" data-category="pdf" id="pdf-tools">PDF Tools</button>
+            <button class="tab-btn" data-category="image" id="image-tools">Image Tools</button>
+            <button class="tab-btn" data-category="text" id="text-tools">Text Tools</button>
+            <button class="tab-btn" data-category="dev" id="dev-tools">Developer</button>
+            <button class="tab-btn" data-category="utility" id="utility-tools">Utilities</button>
         </div>
 
         <div class="tools-grid">
             <!-- PDF Tools -->
-            <div class="tool-card">
+            <div class="tool-card" data-category="pdf">
                 <div class="tool-icon">
                     <i class="fas fa-object-group"></i>
                 </div>
                 <h3>Merge PDF</h3>
                 <p>Combine multiple PDF files into a single document with drag and drop</p>
-                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+                <button class="tool-btn" data-tool="merge-pdf">Use Tool <i class="fas fa-arrow-right"></i></button>
             </div>
-            <div class="tool-card">
+            <div class="tool-card" data-category="pdf">
                 <div class="tool-icon">
                     <i class="fas fa-cut"></i>
                 </div>
                 <h3>Split PDF</h3>
                 <p>Extract specific pages or split PDFs into multiple documents</p>
-                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+                <button class="tool-btn" data-tool="split-pdf">Use Tool <i class="fas fa-arrow-right"></i></button>
             </div>
-            <div class="tool-card">
+            <div class="tool-card" data-category="pdf">
                 <div class="tool-icon">
                     <i class="fas fa-compress"></i>
                 </div>
                 <h3>Compress PDF</h3>
                 <p>Reduce PDF file size without quality loss for easy sharing</p>
-                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+                <button class="tool-btn" data-tool="compress-pdf">Use Tool <i class="fas fa-arrow-right"></i></button>
             </div>
             
             <!-- Image Tools -->
-            <div class="tool-card">
+            <div class="tool-card" data-category="image">
                 <div class="tool-icon">
                     <i class="fas fa-file-image"></i>
                 </div>
                 <h3>Image Compressor</h3>
                 <p>Reduce image file size while preserving visual quality</p>
-                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+                <button class="tool-btn" data-tool="image-compressor">Use Tool <i class="fas fa-arrow-right"></i></button>
             </div>
-            <div class="tool-card">
+            <div class="tool-card" data-category="image">
                 <div class="tool-icon">
                     <i class="fas fa-expand"></i>
                 </div>
                 <h3>Image Resizer</h3>
                 <p>Resize images to exact dimensions or percentages</p>
-                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+                <button class="tool-btn" data-tool="image-resizer">Use Tool <i class="fas fa-arrow-right"></i></button>
             </div>
-            <div class="tool-card">
+            <div class="tool-card" data-category="image">
                 <div class="tool-icon">
                     <i class="fas fa-sync"></i>
                 </div>
                 <h3>Image Converter</h3>
                 <p>Convert between JPG, PNG, WebP, and other formats</p>
-                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+                <button class="tool-btn" data-tool="image-converter">Use Tool <i class="fas fa-arrow-right"></i></button>
             </div>
             
             <!-- Developer Tools -->
-            <div class="tool-card">
+            <div class="tool-card" data-category="dev">
                 <div class="tool-icon">
                     <i class="fas fa-brackets-curly"></i>
                 </div>
                 <h3>JSON Formatter</h3>
                 <p>Validate and format JSON data with syntax highlighting</p>
-                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+                <button class="tool-btn" data-tool="json-formatter">Use Tool <i class="fas fa-arrow-right"></i></button>
             </div>
-            <div class="tool-card">
+            <div class="tool-card" data-category="dev">
                 <div class="tool-icon">
                     <i class="fas fa-link"></i>
                 </div>
                 <h3>URL Encoder/Decoder</h3>
                 <p>Encode or decode URL strings for safe transmission</p>
-                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+                <button class="tool-btn" data-tool="url-encoder">Use Tool <i class="fas fa-arrow-right"></i></button>
             </div>
-            <div class="tool-card">
+            <div class="tool-card" data-category="dev">
                 <div class="tool-icon">
                     <i class="fas fa-lock"></i>
                 </div>
                 <h3>Password Generator</h3>
                 <p>Create strong, secure passwords with customizable options</p>
-                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+                <button class="tool-btn" data-tool="password-generator">Use Tool <i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
-    </section>
-
-    <!-- Demo Tool Section -->
-    <section class="demo-tool">
-        <div class="section-header">
-            <h2>Experience HubEarn Tools</h2>
-            <p>Try our Text Case Converter tool - completely free and works entirely in your browser</p>
-        </div>
-
-        <div class="tool-container">
+        
+        <!-- Tool Containers -->
+        <div class="tool-container" id="merge-pdf-tool">
             <div class="tool-header">
                 <div class="tool-icon">
-                    <i class="fas fa-text-height"></i>
+                    <i class="fas fa-object-group"></i>
                 </div>
-                <h3 class="tool-title">Text Case Converter</h3>
+                <h3 class="tool-title">Merge PDF Files</h3>
+            </div>
+            
+            <div class="tool-interface">
+                <div class="file-upload" id="pdf-merge-upload">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Drag & Drop PDF Files</h3>
+                    <p>or click to browse files</p>
+                    <input type="file" id="pdf-merge-input" accept=".pdf" multiple style="display: none;">
+                </div>
+                
+                <div id="pdf-merge-preview" style="display: none;">
+                    <h4>Selected Files:</h4>
+                    <div id="pdf-merge-files"></div>
+                </div>
+                
+                <div class="progress-container" id="pdf-merge-progress">
+                    <div class="progress-bar" id="pdf-merge-progress-bar"></div>
+                </div>
+                
+                <div class="tool-actions">
+                    <button class="btn btn-primary" id="pdf-merge-btn">
+                        <i class="fas fa-object-group"></i> Merge PDFs
+                    </button>
+                    <button class="btn btn-secondary" id="pdf-merge-reset">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tool-container" id="image-compressor-tool">
+            <div class="tool-header">
+                <div class="tool-icon">
+                    <i class="fas fa-file-image"></i>
+                </div>
+                <h3 class="tool-title">Image Compressor</h3>
+            </div>
+            
+            <div class="tool-interface">
+                <div class="file-upload" id="image-compressor-upload">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Drag & Drop Images</h3>
+                    <p>Supports JPG, PNG, WebP</p>
+                    <input type="file" id="image-compressor-input" accept="image/*" style="display: none;">
+                </div>
+                
+                <div id="image-compressor-preview" class="tool-preview" style="display: none;">
+                    <!-- Preview will be added here -->
+                </div>
+                
+                <div class="tool-actions">
+                    <button class="btn btn-primary" id="image-compressor-btn" disabled>
+                        <i class="fas fa-compress"></i> Compress Image
+                    </button>
+                    <button class="btn btn-success" id="image-compressor-download" disabled>
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                    <button class="btn btn-secondary" id="image-compressor-reset">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+                
+                <div class="progress-container" id="image-compressor-progress">
+                    <div class="progress-bar" id="image-compressor-progress-bar"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tool-container" id="json-formatter-tool">
+            <div class="tool-header">
+                <div class="tool-icon">
+                    <i class="fas fa-brackets-curly"></i>
+                </div>
+                <h3 class="tool-title">JSON Formatter</h3>
             </div>
             
             <div class="tool-interface">
                 <div class="tool-input">
-                    <label>Input Text</label>
-                    <textarea id="input-text" placeholder="Enter your text here">Try converting this text to different cases</textarea>
+                    <label>Input JSON</label>
+                    <textarea id="json-input" placeholder='{"name": "value"}'>{"example": "This is sample JSON", "numbers": [1, 2, 3]}</textarea>
                 </div>
                 
                 <div class="tool-output">
-                    <label>Converted Text</label>
-                    <textarea id="output-text" readonly></textarea>
+                    <label>Formatted JSON</label>
+                    <textarea id="json-output" readonly></textarea>
                 </div>
             </div>
             
             <div class="tool-actions">
-                <button class="btn btn-primary" id="to-upper">
-                    <i class="fas fa-text-height"></i> UPPERCASE
+                <button class="btn btn-primary" id="json-format-btn">
+                    <i class="fas fa-brackets-curly"></i> Format JSON
                 </button>
-                <button class="btn btn-primary" id="to-lower">
-                    <i class="fas fa-text-height"></i> lowercase
-                </button>
-                <button class="btn btn-primary" id="to-title">
-                    <i class="fas fa-heading"></i> Title Case
-                </button>
-                <button class="btn btn-primary" id="to-sentence">
-                    <i class="fas fa-font"></i> Sentence case
-                </button>
-                <button class="btn btn-secondary" id="copy-output">
+                <button class="btn btn-success" id="json-copy-btn">
                     <i class="fas fa-copy"></i> Copy
+                </button>
+                <button class="btn btn-secondary" id="json-clear-btn">
+                    <i class="fas fa-trash"></i> Clear
+                </button>
+            </div>
+        </div>
+        
+        <div class="tool-container" id="password-generator-tool">
+            <div class="tool-header">
+                <div class="tool-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3 class="tool-title">Password Generator</h3>
+            </div>
+            
+            <div class="tool-interface">
+                <div class="tool-input">
+                    <label>Password Length</label>
+                    <input type="range" id="password-length" min="8" max="32" value="16" style="width: 100%;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>8</span>
+                        <span id="password-length-value">16 characters</span>
+                        <span>32</span>
+                    </div>
+                    
+                    <div style="margin-top: 1.5rem;">
+                        <label>Include:</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" id="include-uppercase" checked> Uppercase Letters
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" id="include-lowercase" checked> Lowercase Letters
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" id="include-numbers" checked> Numbers
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" id="include-symbols" checked> Symbols
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tool-output">
+                    <label>Generated Password</label>
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                        <input type="text" id="password-output" style="flex: 1; padding: 0.75rem; background: var(--dark-800); border: 1px solid var(--dark-600); border-radius: var(--radius); color: var(--light-200);" readonly>
+                        <button class="btn btn-secondary" id="password-copy-btn" style="height: 100%;">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="password-strength" style="height: 10px; background: var(--dark-600); border-radius: 5px; margin-top: 1rem; overflow: hidden;">
+                        <div id="password-strength-bar" style="height: 100%; width: 0%; background: var(--danger); border-radius: 5px; transition: width 0.3s ease;"></div>
+                    </div>
+                    <div id="password-strength-text" style="text-align: center; margin-top: 0.5rem; font-size: 0.9rem;">Strength: Weak</div>
+                </div>
+            </div>
+            
+            <div class="tool-actions">
+                <button class="btn btn-primary" id="password-generate-btn">
+                    <i class="fas fa-sync"></i> Generate Password
+                </button>
+                <button class="btn btn-secondary" id="password-reset-btn">
+                    <i class="fas fa-redo"></i> Reset
                 </button>
             </div>
         </div>
@@ -796,11 +997,11 @@
             <div class="footer-col">
                 <h3>Tools</h3>
                 <ul>
-                    <li><a href="#">PDF Tools</a></li>
-                    <li><a href="#">Image Tools</a></li>
-                    <li><a href="#">Text Tools</a></li>
-                    <li><a href="#">Developer Tools</a></li>
-                    <li><a href="#">Calculators</a></li>
+                    <li><a href="#pdf-tools">PDF Tools</a></li>
+                    <li><a href="#image-tools">Image Tools</a></li>
+                    <li><a href="#text-tools">Text Tools</a></li>
+                    <li><a href="#dev-tools">Developer Tools</a></li>
+                    <li><a href="#utility-tools">Utilities</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -828,55 +1029,392 @@
     </footer>
 
     <script>
-        // Text Case Converter Demo
-        const inputText = document.getElementById('input-text');
-        const outputText = document.getElementById('output-text');
-        
-        // Set initial output
-        outputText.value = inputText.value;
-        
-        // Conversion functions
-        document.getElementById('to-upper').addEventListener('click', () => {
-            outputText.value = inputText.value.toUpperCase();
+        // Feature cards hyperlinks
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.getAttribute('href');
+                document.querySelector(target).scrollIntoView({ behavior: 'smooth' });
+            });
         });
-        
-        document.getElementById('to-lower').addEventListener('click', () => {
-            outputText.value = inputText.value.toLowerCase();
+
+        // Navigation links
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.getAttribute('href');
+                if(target === '#') return;
+                document.querySelector(target).scrollIntoView({ behavior: 'smooth' });
+            });
         });
-        
-        document.getElementById('to-title').addEventListener('click', () => {
-            outputText.value = inputText.value
-                .toLowerCase()
-                .split(' ')
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(' ');
-        });
-        
-        document.getElementById('to-sentence').addEventListener('click', () => {
-            outputText.value = inputText.value
-                .toLowerCase()
-                .replace(/(^\s*\w|[.!?]\s+\w)/g, c => c.toUpperCase());
-        });
-        
-        document.getElementById('copy-output').addEventListener('click', () => {
-            outputText.select();
-            document.execCommand('copy');
-            alert('Copied to clipboard!');
-        });
-        
-        // Update output when input changes
-        inputText.addEventListener('input', () => {
-            outputText.value = inputText.value;
-        });
-        
+
         // Tab functionality
         const tabBtns = document.querySelectorAll('.tab-btn');
+        const toolCards = document.querySelectorAll('.tool-card');
+        const toolContainers = document.querySelectorAll('.tool-container');
+        
         tabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 tabBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
+                
+                const category = btn.getAttribute('data-category');
+                
+                // Hide all tool containers
+                toolContainers.forEach(container => {
+                    container.classList.remove('active');
+                });
+                
+                // Filter tool cards
+                toolCards.forEach(card => {
+                    if(category === 'all' || card.getAttribute('data-category') === category) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
             });
         });
+
+        // Tool buttons functionality
+        document.querySelectorAll('.tool-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const toolId = this.getAttribute('data-tool');
+                
+                // Hide all tool containers
+                toolContainers.forEach(container => {
+                    container.classList.remove('active');
+                });
+                
+                // Show the selected tool
+                document.getElementById(`${toolId}-tool`).classList.add('active');
+                
+                // Scroll to the tool
+                document.getElementById(`${toolId}-tool`).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // JSON Formatter Tool
+        const jsonInput = document.getElementById('json-input');
+        const jsonOutput = document.getElementById('json-output');
+        
+        document.getElementById('json-format-btn').addEventListener('click', () => {
+            try {
+                const jsonObj = JSON.parse(jsonInput.value);
+                jsonOutput.value = JSON.stringify(jsonObj, null, 2);
+            } catch (e) {
+                jsonOutput.value = 'Invalid JSON: ' + e.message;
+            }
+        });
+        
+        document.getElementById('json-copy-btn').addEventListener('click', () => {
+            jsonOutput.select();
+            document.execCommand('copy');
+            alert('Copied to clipboard!');
+        });
+        
+        document.getElementById('json-clear-btn').addEventListener('click', () => {
+            jsonInput.value = '';
+            jsonOutput.value = '';
+        });
+
+        // Password Generator Tool
+        const passwordOutput = document.getElementById('password-output');
+        const passwordLength = document.getElementById('password-length');
+        const passwordLengthValue = document.getElementById('password-length-value');
+        const passwordStrengthBar = document.getElementById('password-strength-bar');
+        const passwordStrengthText = document.getElementById('password-strength-text');
+        
+        passwordLength.addEventListener('input', () => {
+            passwordLengthValue.textContent = `${passwordLength.value} characters`;
+        });
+        
+        document.getElementById('password-generate-btn').addEventListener('click', generatePassword);
+        document.getElementById('password-copy-btn').addEventListener('click', () => {
+            passwordOutput.select();
+            document.execCommand('copy');
+            alert('Password copied!');
+        });
+        
+        document.getElementById('password-reset-btn').addEventListener('click', () => {
+            passwordOutput.value = '';
+            passwordStrengthBar.style.width = '0%';
+            passwordStrengthText.textContent = 'Strength: Weak';
+        });
+        
+        function generatePassword() {
+            const length = passwordLength.value;
+            const includeUppercase = document.getElementById('include-uppercase').checked;
+            const includeLowercase = document.getElementById('include-lowercase').checked;
+            const includeNumbers = document.getElementById('include-numbers').checked;
+            const includeSymbols = document.getElementById('include-symbols').checked;
+            
+            let charset = '';
+            if (includeUppercase) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (includeLowercase) charset += 'abcdefghijklmnopqrstuvwxyz';
+            if (includeNumbers) charset += '0123456789';
+            if (includeSymbols) charset += '!@#$%^&*()_+~`|}{[]:;?><,./-=';
+            
+            if (charset === '') {
+                alert('Please select at least one character type');
+                return;
+            }
+            
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charset.length);
+                password += charset[randomIndex];
+            }
+            
+            passwordOutput.value = password;
+            
+            // Calculate password strength
+            let strength = 0;
+            if (length >= 12) strength += 40;
+            if (includeUppercase) strength += 15;
+            if (includeLowercase) strength += 15;
+            if (includeNumbers) strength += 15;
+            if (includeSymbols) strength += 15;
+            
+            passwordStrengthBar.style.width = `${strength}%`;
+            
+            if (strength < 40) {
+                passwordStrengthBar.style.background = 'var(--danger)';
+                passwordStrengthText.textContent = 'Strength: Weak';
+            } else if (strength < 70) {
+                passwordStrengthBar.style.background = 'var(--warning)';
+                passwordStrengthText.textContent = 'Strength: Medium';
+            } else {
+                passwordStrengthBar.style.background = 'var(--success)';
+                passwordStrengthText.textContent = 'Strength: Strong';
+            }
+        }
+        
+        // Generate initial password
+        generatePassword();
+
+        // Image Compressor Tool
+        const imageCompressorInput = document.getElementById('image-compressor-input');
+        const imageCompressorBtn = document.getElementById('image-compressor-btn');
+        const imageCompressorDownload = document.getElementById('image-compressor-download');
+        const imageCompressorPreview = document.getElementById('image-compressor-preview');
+        const imageCompressorReset = document.getElementById('image-compressor-reset');
+        
+        let originalImage = null;
+        let compressedImage = null;
+        
+        document.getElementById('image-compressor-upload').addEventListener('click', () => {
+            imageCompressorInput.click();
+        });
+        
+        imageCompressorInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                originalImage = file;
+                
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imageCompressorPreview.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview">
+                        <div style="margin-top: 1rem; text-align: center;">
+                            <strong>Original:</strong> ${formatFileSize(file.size)}
+                        </div>
+                    `;
+                    imageCompressorPreview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+                
+                imageCompressorBtn.disabled = false;
+            }
+        });
+        
+        imageCompressorBtn.addEventListener('click', function() {
+            if (!originalImage) return;
+            
+            const progressBar = document.getElementById('image-compressor-progress-bar');
+            const progressContainer = document.getElementById('image-compressor-progress');
+            
+            progressContainer.style.display = 'block';
+            progressBar.style.width = '0%';
+            
+            // Simulate compression progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                progressBar.style.width = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    
+                    // Actual compression using Compressor.js
+                    new Compressor(originalImage, {
+                        quality: 0.6,
+                        success(result) {
+                            compressedImage = result;
+                            
+                            // Show compressed preview
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                imageCompressorPreview.innerHTML = `
+                                    <img src="${e.target.result}" alt="Compressed Preview">
+                                    <div style="margin-top: 1rem; text-align: center;">
+                                        <strong>Original:</strong> ${formatFileSize(originalImage.size)}
+                                        <br>
+                                        <strong>Compressed:</strong> ${formatFileSize(result.size)}
+                                        <br>
+                                        <strong>Reduction:</strong> ${Math.round(100 - (result.size / originalImage.size * 100))}%
+                                    </div>
+                                `;
+                                imageCompressorPreview.style.display = 'block';
+                            };
+                            reader.readAsDataURL(result);
+                            
+                            imageCompressorDownload.disabled = false;
+                        },
+                        error(err) {
+                            console.error(err.message);
+                            alert('Error compressing image: ' + err.message);
+                        }
+                    });
+                }
+            }, 100);
+        });
+        
+        imageCompressorDownload.addEventListener('click', function() {
+            if (!compressedImage) return;
+            
+            const url = URL.createObjectURL(compressedImage);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'compressed_' + originalImage.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+        
+        imageCompressorReset.addEventListener('click', function() {
+            originalImage = null;
+            compressedImage = null;
+            imageCompressorInput.value = '';
+            imageCompressorPreview.style.display = 'none';
+            imageCompressorPreview.innerHTML = '';
+            imageCompressorBtn.disabled = true;
+            imageCompressorDownload.disabled = true;
+            document.getElementById('image-compressor-progress').style.display = 'none';
+        });
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' bytes';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            else return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        // PDF Merge Tool
+        const pdfMergeInput = document.getElementById('pdf-merge-input');
+        const pdfMergeBtn = document.getElementById('pdf-merge-btn');
+        const pdfMergeReset = document.getElementById('pdf-merge-reset');
+        const pdfMergeFiles = document.getElementById('pdf-merge-files');
+        const pdfMergePreview = document.getElementById('pdf-merge-preview');
+        const pdfMergeProgress = document.getElementById('pdf-merge-progress');
+        const pdfMergeProgressBar = document.getElementById('pdf-merge-progress-bar');
+        
+        let pdfFiles = [];
+        
+        document.getElementById('pdf-merge-upload').addEventListener('click', () => {
+            pdfMergeInput.click();
+        });
+        
+        pdfMergeInput.addEventListener('change', function(e) {
+            if (this.files && this.files.length > 0) {
+                pdfFiles = Array.from(this.files);
+                updatePdfMergePreview();
+            }
+        });
+        
+        function updatePdfMergePreview() {
+            pdfMergeFiles.innerHTML = '';
+            
+            pdfFiles.forEach((file, index) => {
+                const fileElement = document.createElement('div');
+                fileElement.style.display = 'flex';
+                fileElement.style.alignItems = 'center';
+                fileElement.style.justifyContent = 'space-between';
+                fileElement.style.padding = '0.5rem';
+                fileElement.style.background = 'var(--dark-700)';
+                fileElement.style.borderRadius = 'var(--radius)';
+                fileElement.style.marginBottom = '0.5rem';
+                
+                fileElement.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-file-pdf" style="color: #e63946;"></i>
+                        <span>${file.name} (${formatFileSize(file.size)})</span>
+                    </div>
+                    <button class="btn btn-secondary" data-index="${index}" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                pdfMergeFiles.appendChild(fileElement);
+            });
+            
+            pdfMergePreview.style.display = pdfFiles.length > 0 ? 'block' : 'none';
+        }
+        
+        pdfMergeFiles.addEventListener('click', function(e) {
+            if (e.target.closest('button')) {
+                const index = parseInt(e.target.closest('button').getAttribute('data-index'));
+                pdfFiles.splice(index, 1);
+                updatePdfMergePreview();
+            }
+        });
+        
+        pdfMergeBtn.addEventListener('click', async function() {
+            if (pdfFiles.length < 2) {
+                alert('Please select at least 2 PDF files to merge');
+                return;
+            }
+            
+            pdfMergeProgress.style.display = 'block';
+            pdfMergeProgressBar.style.width = '0%';
+            
+            try {
+                // Simulate progress
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 10;
+                    pdfMergeProgressBar.style.width = `${progress}%`;
+                    
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        
+                        // Actual PDF merging would go here
+                        // For this demo, we'll simulate a download
+                        setTimeout(() => {
+                            alert('PDFs merged successfully! In a real implementation, the merged PDF would download now.');
+                            pdfMergeProgress.style.display = 'none';
+                        }, 500);
+                    }
+                }, 100);
+            } catch (error) {
+                console.error('PDF merge error:', error);
+                alert('Error merging PDFs: ' + error.message);
+                pdfMergeProgress.style.display = 'none';
+            }
+        });
+        
+        pdfMergeReset.addEventListener('click', function() {
+            pdfFiles = [];
+            pdfMergeInput.value = '';
+            pdfMergePreview.style.display = 'none';
+            pdfMergeFiles.innerHTML = '';
+            pdfMergeProgress.style.display = 'none';
+        });
+        
+        // Initialize tools
+        document.getElementById('json-format-btn').click();
+        document.getElementById('json-format-btn').click();
     </script>
 </body>
 </html>

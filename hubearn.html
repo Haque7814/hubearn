@@ -1,1 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HubEarn - Everyday Tools for Everyone</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #a855f7;
+            --dark-900: #0f172a;
+            --dark-800: #1e293b;
+            --dark-700: #334155;
+            --dark-600: #475569;
+            --light-200: #e2e8f0;
+            --light-100: #f1f5f9;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --radius: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --transition: all 0.3s ease;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--dark-900);
+            color: var(--light-200);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--dark-800);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon::before {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--light-200);
+            border-radius: 50%;
+        }
+
+        .logo-icon::after {
+            content: "";
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: var(--light-200);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline {
+            font-size: 0.9rem;
+            color: var(--light-100);
+            opacity: 0.8;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        nav a {
+            color: var(--light-200);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--dark-700);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light-200);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--dark-800), var(--dark-900));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, var(--primary) 0%, transparent 70%);
+            opacity: 0.1;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--light-200), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            font-size: 1.2rem;
+            color: var(--light-100);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+        }
+
+        .feature-card {
+            background: var(--dark-800);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid var(--dark-700);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--dark-700);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .feature-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--light-200);
+        }
+
+        /* Tools Section */
+        .tools-section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--light-200);
+        }
+
+        .section-header p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--light-100);
+        }
+
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--dark-700);
+            border: none;
+            color: var(--light-200);
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .tab-btn:hover, .tab-btn.active {
+            background: var(--primary);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tool-card {
+            background: var(--dark-800);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            transition: var(--transition);
+            border: 1px solid var(--dark-700);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tool-card:hover {
+            border-color: var(--primary);
+        }
+
+        .tool-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-dark);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .tool-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--light-200);
+        }
+
+        .tool-card p {
+            color: var(--light-100);
+            opacity: 0.8;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .tool-btn {
+            background: var(--dark-700);
+            color: var(--light-200);
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: var(--transition);
+            width: 100%;
+        }
+
+        .tool-btn:hover {
+            background: var(--primary);
+        }
+
+        /* Demo Tool Section */
+        .demo-tool {
+            padding: 4rem 2rem;
+            background: var(--dark-800);
+            max-width: 1200px;
+            margin: 2rem auto;
+            border-radius: var(--radius);
+        }
+
+        .tool-container {
+            background: var(--dark-700);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tool-title {
+            font-size: 1.75rem;
+            color: var(--light-200);
+        }
+
+        .tool-interface {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .tool-interface {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tool-input, .tool-output {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tool-input textarea {
+            width: 100%;
+            height: 200px;
+            background: var(--dark-800);
+            border: 1px solid var(--dark-600);
+            border-radius: var(--radius);
+            padding: 1rem;
+            color: var(--light-200);
+            font-family: monospace;
+            resize: vertical;
+        }
+
+        .tool-output textarea {
+            width: 100%;
+            height: 200px;
+            background: var(--dark-800);
+            border: 1px solid var(--dark-600);
+            border-radius: var(--radius);
+            padding: 1rem;
+            color: var(--light-200);
+            font-family: monospace;
+            resize: none;
+        }
+
+        .tool-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--dark-600);
+            color: var(--light-200);
+        }
+
+        .btn-secondary:hover {
+            background: var(--dark-700);
+        }
+
+        /* Benefits Section */
+        .benefits {
+            padding: 4rem 2rem;
+            background: var(--dark-800);
+            text-align: center;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 3rem auto 0;
+        }
+
+        .benefit-card {
+            background: var(--dark-700);
+            padding: 2rem;
+            border-radius: var(--radius);
+            text-align: center;
+        }
+
+        .benefit-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .benefit-card h3 {
+            margin-bottom: 1rem;
+            color: var(--light-200);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-800);
+            padding: 3rem 2rem 2rem;
+            border-top: 1px solid var(--dark-700);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-col h3 {
+            margin-bottom: 1.5rem;
+            color: var(--light-200);
+            font-size: 1.25rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-col ul li a {
+            color: var(--light-100);
+            text-decoration: none;
+            transition: var(--transition);
+            opacity: 0.8;
+        }
+
+        .footer-col ul li a:hover {
+            opacity: 1;
+            color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--dark-700);
+            color: var(--light-100);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Logo and Navigation -->
+    <header>
+        <div class="logo">
+            <div class="logo-icon"></div>
+            <div>
+                <div class="logo-text">HubEarn</div>
+                <div class="tagline">Everyday Tools for Everyone</div>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#">PDF Tools</a></li>
+                <li><a href="#">Image Tools</a></li>
+                <li><a href="#">Text Tools</a></li>
+                <li><a href="#">Developer</a></li>
+                <li><a href="#">Utilities</a></li>
+            </ul>
+        </nav>
+        <button class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Powerful Tools, Zero Cost</h1>
+        <p>HubEarn offers a complete suite of free, privacy-focused tools for students, developers, freelancers, and businesses. No signups, no ads, no tracking - just tools that work.</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <h3>PDF Tools</h3>
+                <p>Merge, split, compress, and secure PDFs without leaving your browser</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-image"></i>
+                </div>
+                <h3>Image Tools</h3>
+                <p>Compress, resize, and convert images while maintaining quality</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3>Developer Tools</h3>
+                <p>Essential utilities for developers including formatters and encoders</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <h3>Calculators</h3>
+                <p>Specialized calculators for finance, health, dates, and conversions</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section class="tools-section">
+        <div class="section-header">
+            <h2>All-in-One Tool Collection</h2>
+            <p>Browse our comprehensive collection of free tools designed to simplify your daily tasks</p>
+        </div>
+
+        <div class="category-tabs">
+            <button class="tab-btn active">All Tools</button>
+            <button class="tab-btn">PDF Tools</button>
+            <button class="tab-btn">Image Tools</button>
+            <button class="tab-btn">Text Tools</button>
+            <button class="tab-btn">Developer</button>
+            <button class="tab-btn">Calculators</button>
+            <button class="tab-btn">Utilities</button>
+            <button class="tab-btn">Security</button>
+        </div>
+
+        <div class="tools-grid">
+            <!-- PDF Tools -->
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-object-group"></i>
+                </div>
+                <h3>Merge PDF</h3>
+                <p>Combine multiple PDF files into a single document with drag and drop</p>
+                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-cut"></i>
+                </div>
+                <h3>Split PDF</h3>
+                <p>Extract specific pages or split PDFs into multiple documents</p>
+                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-compress"></i>
+                </div>
+                <h3>Compress PDF</h3>
+                <p>Reduce PDF file size without quality loss for easy sharing</p>
+                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+            </div>
+            
+            <!-- Image Tools -->
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-file-image"></i>
+                </div>
+                <h3>Image Compressor</h3>
+                <p>Reduce image file size while preserving visual quality</p>
+                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-expand"></i>
+                </div>
+                <h3>Image Resizer</h3>
+                <p>Resize images to exact dimensions or percentages</p>
+                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-sync"></i>
+                </div>
+                <h3>Image Converter</h3>
+                <p>Convert between JPG, PNG, WebP, and other formats</p>
+                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+            </div>
+            
+            <!-- Developer Tools -->
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-brackets-curly"></i>
+                </div>
+                <h3>JSON Formatter</h3>
+                <p>Validate and format JSON data with syntax highlighting</p>
+                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-link"></i>
+                </div>
+                <h3>URL Encoder/Decoder</h3>
+                <p>Encode or decode URL strings for safe transmission</p>
+                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+            </div>
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3>Password Generator</h3>
+                <p>Create strong, secure passwords with customizable options</p>
+                <button class="tool-btn">Use Tool <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Tool Section -->
+    <section class="demo-tool">
+        <div class="section-header">
+            <h2>Experience HubEarn Tools</h2>
+            <p>Try our Text Case Converter tool - completely free and works entirely in your browser</p>
+        </div>
+
+        <div class="tool-container">
+            <div class="tool-header">
+                <div class="tool-icon">
+                    <i class="fas fa-text-height"></i>
+                </div>
+                <h3 class="tool-title">Text Case Converter</h3>
+            </div>
+            
+            <div class="tool-interface">
+                <div class="tool-input">
+                    <label>Input Text</label>
+                    <textarea id="input-text" placeholder="Enter your text here">Try converting this text to different cases</textarea>
+                </div>
+                
+                <div class="tool-output">
+                    <label>Converted Text</label>
+                    <textarea id="output-text" readonly></textarea>
+                </div>
+            </div>
+            
+            <div class="tool-actions">
+                <button class="btn btn-primary" id="to-upper">
+                    <i class="fas fa-text-height"></i> UPPERCASE
+                </button>
+                <button class="btn btn-primary" id="to-lower">
+                    <i class="fas fa-text-height"></i> lowercase
+                </button>
+                <button class="btn btn-primary" id="to-title">
+                    <i class="fas fa-heading"></i> Title Case
+                </button>
+                <button class="btn btn-primary" id="to-sentence">
+                    <i class="fas fa-font"></i> Sentence case
+                </button>
+                <button class="btn btn-secondary" id="copy-output">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits">
+        <div class="section-header">
+            <h2>Why Choose HubEarn?</h2>
+            <p>Our commitment to providing the best free tools experience</p>
+        </div>
+        
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3>Privacy Focused</h3>
+                <p>All tools work in your browser - no data sent to servers, no tracking, no signups</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>Lightning Fast</h3>
+                <p>Optimized for speed with minimal loading times and instant results</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Fully Responsive</h3>
+                <p>Works flawlessly on desktop, tablet, and mobile devices</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <h3>100% Free</h3>
+                <p>All core features available at no cost - no hidden fees or premium walls</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>HubEarn</h3>
+                <p>Everyday tools for students, developers, freelancers, and businesses. Free, fast, and privacy-focused.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Tools</h3>
+                <ul>
+                    <li><a href="#">PDF Tools</a></li>
+                    <li><a href="#">Image Tools</a></li>
+                    <li><a href="#">Text Tools</a></li>
+                    <li><a href="#">Developer Tools</a></li>
+                    <li><a href="#">Calculators</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">API</a></li>
+                    <li><a href="#">Help Center</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2023 HubEarn. All rights reserved. Made with ❤️ for the global community.
+        </div>
+    </footer>
+
+    <script>
+        // Text Case Converter Demo
+        const inputText = document.getElementById('input-text');
+        const outputText = document.getElementById('output-text');
+        
+        // Set initial output
+        outputText.value = inputText.value;
+        
+        // Conversion functions
+        document.getElementById('to-upper').addEventListener('click', () => {
+            outputText.value = inputText.value.toUpperCase();
+        });
+        
+        document.getElementById('to-lower').addEventListener('click', () => {
+            outputText.value = inputText.value.toLowerCase();
+        });
+        
+        document.getElementById('to-title').addEventListener('click', () => {
+            outputText.value = inputText.value
+                .toLowerCase()
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        });
+        
+        document.getElementById('to-sentence').addEventListener('click', () => {
+            outputText.value = inputText.value
+                .toLowerCase()
+                .replace(/(^\s*\w|[.!?]\s+\w)/g, c => c.toUpperCase());
+        });
+        
+        document.getElementById('copy-output').addEventListener('click', () => {
+            outputText.select();
+            document.execCommand('copy');
+            alert('Copied to clipboard!');
+        });
+        
+        // Update output when input changes
+        inputText.addEventListener('input', () => {
+            outputText.value = inputText.value;
+        });
+        
+        // Tab functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
